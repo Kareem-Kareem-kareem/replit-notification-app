@@ -8,6 +8,9 @@ const fs = require('fs');
 // ─── App setup ───────────────────────────────────────────────────────────────
 app.setAppUserModelId('com.voicecast.desktop'); // required for Windows notifications
 
+// Allow audio autoplay in hidden renderer windows (no user gesture available)
+app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
+
 const CONFIG_PATH = path.join(app.getPath('userData'), 'voicecast-config.json');
 
 let config = { name: '', serverUrl: '' };
@@ -92,10 +95,9 @@ function showNotification() {
   if (!Notification.isSupported()) return;
 
   const n = new Notification({
-    title: '📢 VoiceCast — New Voice Message',
-    body: `A voice message has been sent by the admin.`,
-    urgency: 'critical',
-    timeoutType: 'never',
+    title: 'VoiceCast — New Voice Message',
+    body: 'A voice message has been sent by the admin.',
+    silent: false,
   });
 
   n.show();
